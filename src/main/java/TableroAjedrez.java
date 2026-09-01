@@ -258,9 +258,13 @@ public class TableroAjedrez extends JFrame implements ActionListener {
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() {
-                int[] jugadaIA = ia.mejorJugada(juego);
-                if (jugadaIA != null) {
-                    juego.ejecutarMovimiento(jugadaIA[0], jugadaIA[1], jugadaIA[2], jugadaIA[3]);
+                try {
+                    int[] jugadaIA = ia.mejorJugada(juego);
+                    if (jugadaIA != null) {
+                        juego.ejecutarMovimiento(jugadaIA[0], jugadaIA[1], jugadaIA[2], jugadaIA[3]);
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
                 return null;
             }

@@ -283,6 +283,19 @@ public class TestAjedrez {
     }
 
     @Test
+    public void noSePuedeCapturarAlRey() {
+        juego = tableroPersonalizado();
+        juego.setPieza(7, 4, new Pieza(TipoPieza.REY, ColorPieza.BLANCO));
+        juego.setPieza(0, 4, new Pieza(TipoPieza.REY, ColorPieza.NEGRO));
+        juego.setPieza(6, 5, new Pieza(TipoPieza.DAMA, ColorPieza.NEGRO));
+        juego.setTurnoActual(ColorPieza.NEGRO);
+
+        assertFalse(juego.esMovimientoValido(6, 5, 7, 4));
+        assertFalse(juego.ejecutarMovimiento(6, 5, 7, 4));
+        assertEquals(TipoPieza.REY, juego.getPieza(7, 4).getTipo());
+    }
+
+    @Test
     public void jugadaCompletaCambioDeTurno() {
         assertTrue(juego.ejecutarMovimiento(6, 4, 5, 4));
         assertEquals(ColorPieza.NEGRO, juego.getTurnoActual());

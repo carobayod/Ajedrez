@@ -88,6 +88,7 @@ public class Ajedrez {
 
         Pieza destino = tablero[filaDestino][colDestino];
         if (destino != null && destino.getColor() == turnoActual) return false;
+        if (destino != null && destino.getTipo() == TipoPieza.REY) return false;
 
         int diffFila = filaDestino - filaOrigen;
         int diffCol = colDestino - colOrigen;
