@@ -303,6 +303,55 @@ public class TestAjedrez {
         assertEquals(ColorPieza.BLANCO, juego.getTurnoActual());
     }
 
+    @Test
+    public void enroqueLargoValido() {
+        juego = tableroPersonalizado();
+        juego.setPieza(7, 4, new Pieza(TipoPieza.REY, ColorPieza.BLANCO));
+        juego.setPieza(7, 0, new Pieza(TipoPieza.TORRE, ColorPieza.BLANCO));
+        juego.setPieza(7, 7, new Pieza(TipoPieza.TORRE, ColorPieza.BLANCO));
+        juego.setTurnoActual(ColorPieza.BLANCO);
+
+        assertTrue(juego.esEnroqueValido(7, 4, 7, 2));
+        assertTrue(juego.ejecutarMovimiento(7, 4, 7, 2));
+        assertEquals(TipoPieza.REY, juego.getPieza(7, 2).getTipo());
+        assertEquals(TipoPieza.TORRE, juego.getPieza(7, 3).getTipo());
+        assertNull(juego.getPieza(7, 4));
+        assertNull(juego.getPieza(7, 0));
+    }
+
+    @Test
+    public void enroqueInvalidoTorreEnemiga() {
+        juego = tableroPersonalizado();
+        juego.setPieza(7, 4, new Pieza(TipoPieza.REY, ColorPieza.BLANCO));
+        juego.setPieza(7, 7, new Pieza(TipoPieza.TORRE, ColorPieza.NEGRO));
+        juego.setTurnoActual(ColorPieza.BLANCO);
+        assertFalse(juego.esEnroqueValido(7, 4, 7, 6));
+        assertFalse(juego.ejecutarMovimiento(7, 4, 7, 6));
+
+        juego.setTurnoActual(ColorPieza.BLANCO);
+        juego.setPieza(7, 7, null);
+        juego.setPieza(7, 0, new Pieza(TipoPieza.TORRE, ColorPieza.NEGRO));
+        assertFalse(juego.esEnroqueValido(7, 4, 7, 2));
+        assertFalse(juego.ejecutarMovimiento(7, 4, 7, 2));
+    }
+
+    @Test
+    public void enPassantSePreservaEnCopia() {
+        juego = tableroPersonalizado();
+        juego.setPieza(1, 4, new Pieza(TipoPieza.PEON, ColorPieza.NEGRO));
+        juego.setTurnoActual(ColorPieza.NEGRO);
+        juego.ejecutarMovimiento(1, 4, 3, 4, TipoPieza.DAMA);
+        assertNotNull(juego.getCasillaEnPassant());
+
+        Ajedrez copia = new Ajedrez(juego.getTablero(), juego.getTurnoActual(), juego.getCasillaEnPassant());
+        assertNotNull(copia.getCasillaEnPassant());
+        assertEquals(2, copia.getCasillaEnPassant().getiFila());
+        assertEquals(4, copia.getCasillaEnPassant().getiColumna());
+
+        Ajedrez copiaSinEp = new Ajedrez(juego.getTablero(), juego.getTurnoActual());
+        assertNull(copiaSinEp.getCasillaEnPassant());
+    }
+
     private Ajedrez tableroPersonalizado() {
         Ajedrez juego = new Ajedrez();
         for (int f = 0; f < Ajedrez.TAMANIO; f++) {

@@ -159,7 +159,7 @@ public class TableroAjedrez extends JFrame implements ActionListener {
         lEstado.setText("Jugador: " + iPuntosJugador + " | Computadora: " + iPuntosComputadora);
     }
 
-    private void mostrarDialogoPromocion(int fila, int columna) {
+    private boolean mostrarDialogoPromocion(int fila, int columna) {
         String[] opciones = {"Dama", "Torre", "Alfil", "Caballo"};
         TipoPieza[] tipos = {TipoPieza.DAMA, TipoPieza.TORRE, TipoPieza.ALFIL, TipoPieza.CABALLO};
         int eleccion = JOptionPane.showOptionDialog(this,
@@ -169,7 +169,7 @@ public class TableroAjedrez extends JFrame implements ActionListener {
             JOptionPane.PLAIN_MESSAGE,
             null, opciones, opciones[0]);
         if (eleccion < 0) eleccion = 0;
-        juego.ejecutarMovimiento(filaSeleccionada, colSeleccionada, fila, columna, tipos[eleccion]);
+        return juego.ejecutarMovimiento(filaSeleccionada, colSeleccionada, fila, columna, tipos[eleccion]);
     }
 
     public static void main(String[] args) {
@@ -208,7 +208,19 @@ public class TableroAjedrez extends JFrame implements ActionListener {
                             && fila == 0;
 
                         if (esPromocion) {
-                            mostrarDialogoPromocion(fila, columna);
+                            if (mostrarDialogoPromocion(fila, columna)) {
+                                lMensaje.setText("Turno de la computadora...");
+                                actualizarTablero();
+                                filaSeleccionada = -1;
+                                colSeleccionada = -1;
+
+                                if (juego.isJuegoTerminado()) {
+                                    manejarFinJuego();
+                                    return;
+                                }
+
+                                ejecutarTurnoComputadora();
+                            }
                         } else if (juego.ejecutarMovimiento(filaSeleccionada, colSeleccionada, fila, columna)) {
                             lMensaje.setText("Turno de la computadora...");
                             actualizarTablero();

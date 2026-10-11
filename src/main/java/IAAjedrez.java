@@ -68,6 +68,6 @@ public class IAAjedrez {
     }
 
     private Ajedrez copiarJuego(Ajedrez original) {
-        return new Ajedrez(original.getTablero(), original.getTurnoActual());
+        return new Ajedrez(original.getTablero(), original.getTurnoActual(), original.getCasillaEnPassant());
     }
 }

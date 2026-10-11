@@ -28,6 +28,10 @@ public class Ajedrez {
     }
 
     public Ajedrez(Pieza[][] tablero, ColorPieza turno) {
+        this(tablero, turno, null);
+    }
+
+    public Ajedrez(Pieza[][] tablero, ColorPieza turno, PosMatris enPassant) {
         this.tablero = new Pieza[TAMANIO][TAMANIO];
         for (int i = 0; i < TAMANIO; i++) {
             for (int j = 0; j < TAMANIO; j++) {
@@ -40,7 +44,9 @@ public class Ajedrez {
         this.motivoFin = "";
         this.contadorMovimientos = 0;
         this.contadorMedioMovimientos = 0;
-        this.casillaEnPassant = null;
+        this.casillaEnPassant = enPassant != null
+            ? new PosMatris(enPassant.getiFila(), enPassant.getiColumna())
+            : null;
         this.historial = new ArrayList<>();
     }
 
@@ -146,7 +152,7 @@ public class Ajedrez {
 
         if (cD == 6) {
             Pieza torre = tablero[fila][7];
-            if (torre == null || torre.getTipo() != TipoPieza.TORRE || torre.isSeHaMovido()) return false;
+            if (torre == null || torre.getTipo() != TipoPieza.TORRE || torre.getColor() != rey.getColor() || torre.isSeHaMovido()) return false;
             if (tablero[fila][5] != null || tablero[fila][6] != null) return false;
             if (casillaAmenazadaPor(fila, 5, rey.getColor().opuesto())) return false;
             if (casillaAmenazadaPor(fila, 6, rey.getColor().opuesto())) return false;
@@ -155,7 +161,7 @@ public class Ajedrez {
 
         if (cD == 2) {
             Pieza torre = tablero[fila][0];
-            if (torre == null || torre.getTipo() != TipoPieza.TORRE || torre.isSeHaMovido()) return false;
+            if (torre == null || torre.getTipo() != TipoPieza.TORRE || torre.getColor() != rey.getColor() || torre.isSeHaMovido()) return false;
             if (tablero[fila][1] != null || tablero[fila][2] != null || tablero[fila][3] != null) return false;
             if (casillaAmenazadaPor(fila, 3, rey.getColor().opuesto())) return false;
             if (casillaAmenazadaPor(fila, 2, rey.getColor().opuesto())) return false;
